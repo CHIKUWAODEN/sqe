@@ -3,7 +3,7 @@ MINOR   = 0
 OUT     = libhello.so.${MAJOR}.${MINOR}
 
 all:
-	gcc --shared -fPIC -o ${OUT} hello.c 
+	gcc -v --shared -fPIC -o ${OUT} hello.c 
 	rm -f libhello.so
 	rm -f libhello.so.${MAJOR}
 	ln -s ${OUT} libhello.so.${MAJOR}

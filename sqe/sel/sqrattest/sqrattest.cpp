@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <squirrel.h>
 #include "sqrat.h"
 
