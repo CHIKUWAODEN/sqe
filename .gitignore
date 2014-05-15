@@ -1,0 +1,4 @@
+.vagrant
+*.o
+*.DS_Store
+/sqe/bin/sqe
