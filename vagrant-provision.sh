@@ -24,8 +24,6 @@ if [ ! -e squirrel_3.0.6.tar.gz ]; then
 fi
 popd
 
-# echo "export LD_LIBRARY_PATH=/home/vagrant/tmp/SQUIRREL3/lib:${LD_LIBRARY_PATH}" >> /home/vagrant/.bashrc
-# echo "export LD_INCLUDE_PATH=/home/vagrant/tmp/SQUIRREL3/include:${LD_INCLUDE_PATH}"  >> /home/vagrant/.bashrc
 echo "export LIBRARY_PATH=/home/vagrant/tmp/SQUIRREL3/lib:${LIBRARY_PATH}" >> /home/vagrant/.bashrc
 echo "export C_INCLUDE_PATH=/home/vagrant/tmp/SQUIRREL3/include:${INCLUDE_PATH}"  >> /home/vagrant/.bashrc
 echo "export CPLUS_INCLUDE_PATH=/home/vagrant/tmp/SQUIRREL3/include:${INCLUDE_PATH}"  >> /home/vagrant/.bashrc
