@@ -23,16 +23,19 @@
 //-----------------------------------------------------------------------------
 
 #ifdef SQUNICODE
+#include <wchar.h>
+#define sqefprintf fwprintf
 #define sqevprintf vfwprintf
 #define sqeprintf wprintf
 #else
+#define sqefprintf fprintf
 #define sqevprintf vfprintf
 #define sqeprintf printf
 #endif
 
 //-----------------------------------------------------------------------------
 
-// break可能ブロック定義
+// Definition break-able block
 #ifndef		BREAKABLE
 #	define	BREAKABLE(a, b) for(bool a##b=true;a##b;a##b=false)
 #endif
@@ -55,14 +58,18 @@ void printVersion (void) {
 
 void printUsage (void)
 {
-#define USAGE \
-"-h, --help                                                                    \n" \
-"  show help.                                                                  \n" \
-"-v, --version                                                                 \n" \
-"  show version info.                                                          \n" \
-
 	printVersion ();
-	printf (USAGE);
+	sqefprintf(stderr,
+		_SC("Available options are:\n")
+    _SC("-i, --interactive\n")
+    _SC("    run sqe as interactive shell mode.\n")
+    _SC("-d, --debug\n")
+    _SC("    generates debug infos.\n")
+    _SC("-h, --help\n")
+    _SC("   show help.\n")
+    _SC("-v, --version\n")
+    _SC("   show version info.\n")
+  );
 }
 
 //-----------------------------------------------------------------------------
@@ -70,9 +77,9 @@ void printUsage (void)
 void printFunc (HSQUIRRELVM vm, const SQChar *format, ...)
 {
 	va_list vl;
-	va_start   (vl, format);
+	va_start (vl, format);
 	sqevprintf (stdout, format, vl);
-	va_end     (vl);
+	va_end (vl);
 }
 
 //-----------------------------------------------------------------------------
@@ -80,9 +87,9 @@ void printFunc (HSQUIRRELVM vm, const SQChar *format, ...)
 void errorFunc (HSQUIRRELVM vm, const SQChar *format, ...)
 {
 	va_list vl;
-	va_start   (vl, format);
+	va_start (vl, format);
 	sqevprintf (stderr, format, vl);
-	va_end     (vl);
+	va_end (vl);
 }
 
 
@@ -94,9 +101,13 @@ Application::Application ()
 : vm (0)
 {}
 
+//-----------------------------------------------------------------------------
+
 Application::~Application () {
 	this->term (); 
 }
+
+//-----------------------------------------------------------------------------
 
 void Application::init (void)
 {
@@ -122,6 +133,7 @@ void Application::init (void)
 	sq_pop                   (this->vm, 1);
 }
 
+//-----------------------------------------------------------------------------
 
 void Application::term (void)
 {
@@ -133,13 +145,16 @@ void Application::term (void)
 	}
 }
 
+//-----------------------------------------------------------------------------
 
+/* TODO support interacive shell */
 void Application::exec (int argc, char **argv)
 {
 	int result = 0;
 	while( true )
 	{
 		// opt parse
+    static const char *shortOptions = "hvdi";
 		static struct option longOptions [] =
 		{
 			{ "help"        , no_argument, 0, 'h' },
@@ -149,7 +164,7 @@ void Application::exec (int argc, char **argv)
 			{ 0, 0, 0, 0 }
 		};
 		int optionIndex = 0;
-		result = getopt_long (argc, argv, "hv", longOptions, &optionIndex);
+		result = getopt_long (argc, argv, shortOptions, longOptions, &optionIndex);
 		if( -1 == result ) {
 			break;
 		}
@@ -162,17 +177,17 @@ void Application::exec (int argc, char **argv)
 			// 値を取る引数の場合は外部変数 optarg にその値を格納する.
 			case 'd':
 			case 'e':
-				fprintf (stdout, "%c %s\n", c, optarg);
+				sqefprintf (stdout, _SC("%c %s\n"), c, optarg);
 		  		break;
 			*/
 			// 値を取る引数に値がなかった場合 ":" を返す
 			case ':': {
-				fprintf (stdout,"%c needs value\n", result);
+				sqefprintf (stderr, _SC("%c needs value\n"), result);
 				break;
 			}
 			// getoptの引数で指定されなかったオプションを受け取ると "?" を返す
 			case '?': {
-				fprintf (stdout, "unknown\n");
+        sqefprintf (stderr, _SC("unknown\n"));
 				break;
 			}
 		}
@@ -195,7 +210,7 @@ void Application::execScript (char **argv, int argc)
 	SQInteger retval = 0;
 	breakable
 	{
-		// スクリプトファイルのロード
+		// load script file
 		sq_pushroottable (this->vm);
 		if( SQ_FAILED( sqstd_loadfile (this->vm, filename, SQTrue) ) ) {
 			loadFailed = true;
@@ -214,6 +229,7 @@ void Application::execScript (char **argv, int argc)
 			if( type == OT_INTEGER ) {
 				retval = type;
 				sq_getinteger (this->vm, -1, &retval);
+        // TODO set exit value
 			}
 		} else {
 			printf ("call error\n");
@@ -227,4 +243,11 @@ void Application::execScript (char **argv, int argc)
 			scprintf (_SC( "Error [%s]\n" ), error);
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+void Application::interactive()
+{
+  // TODO
 }

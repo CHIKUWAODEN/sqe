@@ -20,6 +20,7 @@ class Application
 
 	private:
 		void execScript (char **argv, int argc);
+    void interactive ();
 
 	private:
 		HSQUIRRELVM vm;
