@@ -75,15 +75,8 @@ Ubuntu であればたぶん大丈夫だと思います。
 
 -- -- --
 
-ライセンスについて
---------
-
-本ソフトウェアプロジェクトは GPL でライセンスされています。
-ライセンスの条文に関しては、同梱の LISENCE ファイルをご覧ください。
-
--- -- --
-
+<!--
 author : @kandayasu 
 mail   : yasuhiro.kanda@gmail.com
-web    : http://www.ykanda.net
-date   : Mon Dec 31 05:15:24 JST 2012
+web    : http://www.ykanda.net/
+-->
