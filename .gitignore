@@ -1,0 +1,7 @@
+.vagrant
+*.o
+*.so*
+*.DS_Store
+*.tar.gz
+/sqe/bin/sqe
+/sqe/SQUIRREL*
